@@ -27,37 +27,54 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 
 
 
+  
 //get user datails from frontend
 
 
- const {fullname ,email,username ,password}= req.body
+ const {fullName ,email,username ,password}= req.body
  console.log("email",email)
 
 //   validation not empty
 
- if([fullname,email,password,username].some((field)=>field ?.trim()==="" )){
-  throw new ApiError(400,"All fiels are   required ")
+ if([fullName,email,username,password].some((field)=>field ?.trim()==="" )){
+  throw new ApiError(400,"All fiels are  required ")
  }
  
 
  // check if user already exists username , email
 
 
-const existedUser= User.findOne({
+const existedUser= await User.findOne({
   $or:[{ username },{ email }]
 })
 
-if(existedUser){throw new ApiError(409,"User With email or username is exist ")
+if(existedUser)
+  {throw new ApiError(409,"User With email or username is exist ")
+
+
 }
+
+// console.log(req.body);
+// console.log('jjjjjjjjjjjjjjjjjjj');
+// console.log(req.files);
+
+
+
+
 
 // check for images check for avatar
 
  const avatarLocalPath= req.files?.avatar[0]?.path;
 
 
- const coverImageLocalPath= req.files?.coverImage[0]?.path;
+//  const coverImageLocalPath= req.files?.coverImage[0]?.path;
 
- if(!avatarLocalPath){
+let coverImageLocalPath;
+if(req.files && Array.isArray( req.files.coverImage) && req.files.coverImage.length>0){
+  coverImageLocalPath=req.files.coverImage[0].path
+ }
+
+  if(!avatarLocalPath){
   throw new ApiError (400,"Avatar file is required")
  }
 
@@ -74,7 +91,7 @@ if(!avatar){
   throw new ApiError(400, "Avatar file is required")
 }
 
-const user= await  User.create({
+const user= await User.create({
   fullName,
   avatar:avatar.url,
   coverImage:coverImage?.url||"",
