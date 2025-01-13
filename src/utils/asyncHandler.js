@@ -5,7 +5,34 @@ const asyncHandler=(requestHandler)=>{
     }
 }
 
-export {asyncHandler}
+export {asyncHandler} 
+
+
+// const asyncHandler = (requestHandler) => {
+//   return async (req, res, next) => {
+//     try {
+//       await requestHandler(req, res, next);
+//     } catch (err) {
+//       next(err); // Pass error to the error handling middleware
+//     }
+//   };
+// };
+
+// export { asyncHandler };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
